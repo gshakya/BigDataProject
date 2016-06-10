@@ -2,12 +2,13 @@ package PairedApproach;
 
 import java.io.IOException;
 
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class PairReducer extends
-		Reducer<WordPair, IntWritable, WordPair, IntWritable> {
-	private IntWritable totalCount = new IntWritable();
+		Reducer<WordPair, IntWritable, WordPair, DoubleWritable> {
+	private int total =1;
 
 	@Override
 	protected void reduce(WordPair key, Iterable<IntWritable> values,
@@ -20,10 +21,11 @@ public class PairReducer extends
 		}
 		
 		if (key.getSecondElement().toString().equals("*"))
-		System.out.println(key + "," + count);
+			total = count;
+		 
 
-		totalCount.set(count);
-		context.write(key, totalCount);
+		
+		context.write(key, new DoubleWritable((double)count/(double)total));
 	}
 
 }

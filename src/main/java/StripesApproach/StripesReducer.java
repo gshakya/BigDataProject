@@ -1,7 +1,9 @@
 package StripesApproach;
 
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -14,22 +16,35 @@ public class StripesReducer extends
 
 	public void reduce(
 			Text word,
-			java.lang.Iterable<NeighbourOccuranceMap> occuranceMaps,
+			Iterable<NeighbourOccuranceMap> occuranceMaps,
 			org.apache.hadoop.mapreduce.Reducer<Text, NeighbourOccuranceMap, Text, NeighbourOccuranceMap>.Context context)
 			throws java.io.IOException, InterruptedException {
+		
+		int total= 0;
 
 		aggrOccurace.clear();
 		for (NeighbourOccuranceMap occuranceMap : occuranceMaps) {
+			
+			
 			Set<Writable> keys = occuranceMap.keySet();
 			for (Writable key : keys) {
-
+				DoubleWritable count = new DoubleWritable(1);
 				if (aggrOccurace.containsKey(key)) {
-					IntWritable count = (IntWritable) aggrOccurace
+					 count = (DoubleWritable) aggrOccurace
 							.get(key);
 					count.set(count.get() + 1);
+					
+					
 				} else {
-					aggrOccurace.put(key, new IntWritable(1));
+					aggrOccurace.put(key, count);
 				}
+				total += count.get();
+			}
+			
+			for (Entry occurMap : aggrOccurace.entrySet()){
+				Writable key =  (Writable) occurMap.getKey();
+				DoubleWritable value = (DoubleWritable) occurMap.getValue();
+				aggrOccurace.put(key, new DoubleWritable((double)value.get() / (double)total));
 			}
 		}
 		

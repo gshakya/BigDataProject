@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -20,9 +21,11 @@ public class PairDriver {
 			job.setJarByClass(PairDriver.class);
 
 			FileSystem fs = FileSystem.get(conf);
+			job.setMapOutputKeyClass(WordPair.class);
+			job.setMapOutputValueClass(IntWritable.class);
 
 			job.setOutputKeyClass(WordPair.class);
-			job.setOutputValueClass(IntWritable.class);
+			job.setOutputValueClass(DoubleWritable.class);
 
 			job.setMapperClass(PairMapper.class);
 			job.setReducerClass(PairReducer.class);

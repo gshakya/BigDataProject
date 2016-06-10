@@ -31,13 +31,13 @@ public class StripesDriver {
 			job.setMapperClass(StripesMapper.class);
 			job.setReducerClass(StripesReducer.class);
 			
-//			fs.delete(new Path("output"));
-//			FileInputFormat.addInputPath(job, new Path("input/pair_input.txt"));
-//			FileOutputFormat.setOutputPath(job, new Path("output"));
+			fs.delete(new Path("output"));
+			FileInputFormat.addInputPath(job, new Path("input/pair_input.txt"));
+			FileOutputFormat.setOutputPath(job, new Path("output"));
 
-			fs.delete(new Path(args[1]));
-			FileInputFormat.addInputPath(job, new Path(args[0]));
-			FileOutputFormat.setOutputPath(job, new Path(args[1]));
+//			fs.delete(new Path(args[1]));
+//			FileInputFormat.addInputPath(job, new Path(args[0]));
+//			FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
 			job.waitForCompletion(true);
 
